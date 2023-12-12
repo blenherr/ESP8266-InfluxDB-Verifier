@@ -192,17 +192,25 @@ void loop()
 
         String versionUpper = http.header("X-Influxdb-Version");
         String versionLower = http.header("x-influxdb-version");
+#ifdef DEBUG
+        if (versionUpper.length() > 0 || versionLower.length() > 0)
+        {
+            Serial.print(F("(INFLUX) Raw version header: "));
+            Serial.println(versionUpper + versionLower);
+        }
+#endif
         versionUpper.replace("v", "");
         versionLower.replace("v", "");
-#ifdef DEBUG
-        Serial.println(http.getString());
-#endif
         if (httpResponseCode >= 200 && httpResponseCode < 300)
             influxTestResponseString = F("{\"version\":\"") + versionUpper + versionLower + F("\", \"result\":\"Verified!\"}");
         else if (httpResponseCode >= 400 && httpResponseCode < 500)
         {
             if (http.getString().length() > 0)
             {
+#ifdef DEBUG
+                Serial.print(F("(INFLUX) Raw response text: "));
+                Serial.print(http.getString());
+#endif
                 StaticJsonDocument<128> doc;
                 DeserializationError error = deserializeJson(doc, http.getString());
                 if (error)
@@ -236,7 +244,7 @@ void loop()
             influxTestResponseString = F("{\"version\":\"unknown\", \"result\":\"") + errorString + F("\"}");
         }
 #ifdef DEBUG
-        Serial.print(F("(INFLUX) Send string: "));
+        Serial.print(F("(INFLUX) Javascript string: "));
         Serial.println(influxTestResponseString);
 #endif
         http.end();
