@@ -229,8 +229,14 @@ void loop()
             }
         }
         else
-            influxTestResponseString = F("{\"version\":\"unknown\", \"result\":\"Sometihng went wrong\"}");
+        {
+            String errorString = http.errorToString(httpResponseCode);
+            const char firstChar = errorString.charAt(0);
+            errorString.setCharAt(0, toupper(firstChar));
+            influxTestResponseString = F("{\"version\":\"unknown\", \"result\":\"") + errorString + F("\"}");
+        }
 #ifdef DEBUG
+        Serial.print(F("(INFLUX) Send string: "));
         Serial.println(influxTestResponseString);
 #endif
         http.end();
