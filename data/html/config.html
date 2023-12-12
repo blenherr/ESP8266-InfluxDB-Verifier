@@ -1,0 +1,126 @@
+<!--
+ESP8266 InfluxDB Verifier
+AUTHOR: Benjamin Lenherr
+https://github.com/blenherr/ESP8266-InfluxDB-Verifier
+
+This is a way to verify your InfluxDB configuration
+on a ESP8266 while AsyncWebServer is running.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="config.js"></script>
+</head>
+
+<body onload="onLoadConfig()">
+    <div class="box">
+        <form method="post">
+            <h3>InfluxDB</h3>
+            <table>
+                <tr>
+                    <td class="small"><label for="influx_url">Url:</label></td>
+                    <td class="large"><input type="url" class="i100pc" required minlength="16" maxlength="128"
+                            id="influx_url" name="influx_url"
+                            pattern="^https?://.+:([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"
+                            placeholder="http://influxdb:8086" title="Include http(s):// and : 1 to 65535"
+                            value="%INFLUX_URL%"></td>
+                </tr>
+                <tr>
+                    <td class="small"><label for="influx_meas">Measurement:</label></td>
+                    <td class="large"><input type="text" class="i100pc" required minlength="3" maxlength="32"
+                            pattern="^[A-Za-z0-9]{3,32}$" id="influx_meas" name="influx_meas" placeholder="home"
+                            title="Three to thirty-two alphanumeric characters no spaces" value="%INFLUX_MEAS%"></td>
+                </tr>
+                <tr>
+                    <td class="small">Version:</td>
+                    <td class="large">
+                        <input type="radio" id="influx_ver_1" name="influx_ver" value="1" onclick="influxVer();"
+                            %INFLUX_VER_1%>
+                        <label for="influx_ver_1">v1</label>
+                        <input type="radio" id="influx_ver_2" name="influx_ver" value="2" onclick="influxVer();"
+                            %INFLUX_VER_2%>
+                        <label for="influx_ver_2">v2</label>
+                    </td>
+                </tr>
+                <tr id="influx_db_tr">
+                    <td class="small"><label for="influx_db">Database:</label></td>
+                    <td class="large"><input type="text" class="i100pc" required minlength="3" maxlength="32"
+                            pattern="^[A-Za-z0-9]{3,32}$" id="influx_db" name="influx_db" placeholder="database"
+                            title="Three to thirty-two alphanumeric characters no spaces" value="%INFLUX_DB%"></td>
+                </tr>
+                <tr id="influx_auth_tr">
+                    <td class="small">Authentication:</td>
+                    <td class="large">
+                        <input type="radio" id="influx_auth_0" name="influx_auth" value="0" onclick="influxAuth();"
+                            %INFLUX_AUTH_0%>
+                        <label for="influx_auth_0">No</label>
+                        <input type="radio" id="influx_auth_1" name="influx_auth" value="1" onclick="influxAuth();"
+                            %INFLUX_AUTH_1%>
+                        <label for="influx_auth_1">Yes</label>
+                    </td>
+                </tr>
+                <tr id="influx_user_tr">
+                    <td class="small"><label for="influx_user">Username:</label></td>
+                    <td class="large"><input type="text" class="i100pc" required minlength="3" maxlength="32"
+                            pattern="^[A-Za-z0-9]{3,32}$" id="influx_user" name="influx_user" placeholder="username"
+                            title="Three to thirty-two alphanumeric characters no spaces" value="%INFLUX_USER%"></td>
+                </tr>
+                <tr id="influx_pass_tr">
+                    <td class="small"><label for="influx_pass">Password:</label></td>
+                    <td class="large"><input type="password" class="i100pc" required minlength="3" maxlength="32"
+                            pattern="^[A-Za-z0-9]{3,32}$" id="influx_pass" name="influx_pass" placeholder="password"
+                            title="Three to thirty-two alphanumeric characters no spaces" value="%INFLUX_PASS%"></td>
+                </tr>
+                <tr id="influx_buck_tr">
+                    <td class="small"><label for="influx_buck">Bucket:</label></td>
+                    <td class="large"><input type="text" class="i100pc" required minlength="3" maxlength="32"
+                            pattern="^[A-Za-z0-9]{3,32}$" id="influx_buck" name="influx_buck" placeholder="bucket"
+                            title="Three to thirty-two alphanumeric characters no spaces" value="%INFLUX_BUCK%"></td>
+                </tr>
+                <tr id="influx_org_tr">
+                    <td class="small"><label for="influx_org">Organization:</label></td>
+                    <td class="large"><input type="text" class="i100pc" required minlength="3" maxlength="32"
+                            pattern="^[A-Za-z0-9]{3,32}$" id="influx_org" name="influx_org" placeholder="organisation"
+                            title="Three to thirty-two alphanumeric characters no spaces" value="%INFLUX_ORG%"></td>
+                </tr>
+                <tr id="influx_tok_tr">
+                    <td class="small"><label for="influx_tok">Token:</label></td>
+                    <td class="large"><input type="text" class="i100pc" required minlength="20" maxlength="100"
+                            pattern="^[A-Za-z0-9\-_]{18,98}==$" id="influx_tok" name="influx_tok"
+                            placeholder="sEuVCXkUzv_yEeK9C-UK6rgF8zg=="
+                            title="Twenty to one hundred alphanumeric characters and -_ no spaces, last two characters must be =="
+                            value="%INFLUX_TOK%"></td>
+                </tr>
+                <tr>
+                    <td class="small">&nbsp;</td>
+                    <td class="large">
+                        <button type="button" class="blue" onclick="influxTest();">Testing</button>
+                        <span id="influx_testing"></span>
+                    </td>
+                </tr>
+                <tr id="influx_result_tr" style="display:none;">
+                    <td class="small">&nbsp;</td>
+                    <td class="large">
+                        <span id="influx_version"></span>
+                        <span id="influx_result"></span>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <table>
+                <tr>
+                    <td class="small">&nbsp;</td>
+                    <td class="large"><input type="submit" class="blue" formaction="save" value="Save"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+
+</html>

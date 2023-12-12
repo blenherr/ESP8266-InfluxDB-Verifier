@@ -1,0 +1,114 @@
+/*
+ * ESP8266 InfluxDB Verifier
+ * AUTHOR: Benjamin Lenherr
+ * https://github.com/blenherr/ESP8266-InfluxDB-Verifier
+ *
+ * This is a way to verify your InfluxDB configuration
+ * on a ESP8266 while AsyncWebServer is running.
+ */
+
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    background-color: silver;
+    margin: 0px;
+    padding: 0px;
+    accent-color: steelblue;
+}
+
+table {
+    border-spacing: 0 6px;
+    width: 100%;
+    max-width: 417px;
+}
+
+td {
+    text-align: left;
+}
+
+td.small {
+    width: 35%;
+}
+
+td.large {
+    width: 65%;
+}
+
+input,
+select {
+    font-size: 14px;
+    border: 1px solid grey;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: content-box;
+    box-sizing: border-box;
+    padding: 2px;
+}
+
+input[type=text],
+input[type=email],
+input[type=number],
+input[type=password] {
+    padding-left: 6px;
+}
+
+.i100pc {
+    width: 100%;
+}
+
+.blue {
+    font-size: 14px;
+    width: min-content;
+    cursor: default;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: content-box;
+    box-sizing: border-box;
+    background-color: lightsteelblue;
+    border: 1px solid steelblue;
+    padding: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.blue:hover {
+    background-color: steelblue;
+}
+
+h3 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #262626;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+hr {
+    height: 1px;
+    background-color: #262626;
+    border-width: 0;
+    color: whitesmoke;
+}
+
+div.box {
+    margin: 20px;
+    padding: 10px;
+    text-align: left;
+    background-color: whitesmoke;
+}
+
+@media screen and (max-width: 600px) {
+
+    body,
+    input,
+    select,
+    .blue {
+        font-size: 13px;
+    }
+
+    div.box {
+        margin: 20px 0px 20px 0px;
+        padding: 5px;
+    }
+}
